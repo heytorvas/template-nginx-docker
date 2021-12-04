@@ -1,0 +1,61 @@
+version: '3.0'
+services:
+  nginx_rp:
+    build: ./nginx_rp/
+    container_name: nginx_rp
+    depends_on:
+      - server1
+      - server2
+      - server3
+    networks:
+      - docker_network
+    links:
+      - server1
+      - server2
+      - server3
+    ports:
+      - 80:80
+
+  nginx_lb:
+    build: ./nginx_lb/
+    container_name: nginx_lb
+    depends_on:
+      - server1
+      - server2
+    networks:
+      - docker_network
+    links:
+      - server1
+      - server2
+    ports:
+      - 80:80
+
+  server1:
+    container_name: server1
+    build: ./server1/
+    command: python app.py 
+    ports:
+      - "81:81"
+    networks:
+      - docker_network
+
+  server2:
+    container_name: server2
+    build: ./server2/
+    command: python app.py 
+    ports:
+      - "82:82"
+    networks:
+      - docker_network
+
+  server3:
+    container_name: server3
+    build: ./server3/
+    command: python app.py 
+    ports:
+      - "83:83"
+    networks:
+      - docker_network
+
+networks:
+  docker_network:
